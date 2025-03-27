@@ -1,0 +1,151 @@
+# Unleashing the Potential of Large Language Models for Text-to-Image Generation through Autoregressive Representation Alignment
+[![ARRA](https://img.shields.io/badge/Paper-ARRA-2b9348.svg?logo=arXiv)](https://arxiv.org/abs/2503.07334)&#160;
+
+## 🌿 Introduction
+We present Autoregressive Representation Alignment (ARRA), a new training framework that unlocks global-coherent text-to-image generation in autoregressive LLMs without architectural changes. Unlike prior work that requires complex architectural redesigns, ARRA aligns LLM hidden states with visual representations from external visual foundational models via a global visual alignment loss and a hybrid token, <HYBNEXT>. This token enforces dual constraints: local next-token prediction and global semantic distillation, enabling LLMs to implicitly learn spatial and contextual coherence while retaining their original autoregressive paradigm. Extensive experiments validate ARRA's plug-and-play versatility. When training from text-generation-only LLMs or random initialization, ARRA reduces FID by 25.5% (MIMIC-CXR), 8.8% (DeepEyeNet), and 7.5% (ImageNet) for advanced autoregressive LLMs like Chameleon and LlamaGen, all without framework modifications. For domain adaption, ARRA aligns general-purpose LLMs with specialized models (e.g., BioMedCLIP), achieving an 18.6% FID reduction over direct fine-tuning on medical imaging (MIMIC-CXR). By demonstrating that training objective redesign -- not just architectural innovation -- can resolve cross-modal global coherence challenges, ARRA offers a complementary paradigm for advancing autoregressive models. Code and models will be released to advance autoregressive image generation.
+### ARRA Framework
+![ARRA Framework](./pipline.png "ARRA Framework")
+### Results
+![ARRA Results](./results.png "ARRA Results")
+
+
+## 🚀 Demo
+Please download models, and run
+```
+python3 arra/inference_vision.py
+```
+The generated images will be saved to `./generated_image`.
+
+
+## ⚡ Training process
+### Pre-tokenization
+For efficiency considerations, the multi-modal datasets are pre-tokenized into sequences of token ids. This leads to significantly faster training.
+
+### 1. Run Tokenization
+
+This stage tokenizes each data point, consisting of interleaved image and text, into a single sequence of integer tokens. After tokenization, the sequence is saved to disk for trainining-time usage. Together with the saved tokens, a json-formatted record file is also generated for indexing all the saved token files. For faster tokenization, you may use multiple GPUs and dispatch different subsets of data to them.
+
+#### Command:
+
+```bash
+for i in {0..7}
+do
+  export CUDA_VISIBLE_DEVICES=${i}
+  python -u pre_tokenize/pre_tokenize_new.py \
+  --splits=8 \
+  --rank=${i} \
+  --in_filename /path/to/in_filename.json \
+  --out_dir /path/to/out_dir \
+  --target_size 512 &> ${i}.log &
+done
+```
+
+#### Format of Input File:
+
+`in_filename` is expected to be a json file with the following format:
+```python
+[
+    {...},
+    {...},
+    {
+        "conversations": [
+            {
+                "from": "human",
+                "value": "AP view chest x-ray image, Nasogastric tube is coiled in the stomach."
+            },
+            {
+                "from": "gpt",
+                "value": "<|image|>"
+            }
+        ],
+        "image": [
+            "/data/xxing/datasets/MIMIC-CXR/files/p19/p19023118/s50489739/da2a33b1-a3e756c6-9aec59ef-dcc2bfe8-0e872a6f.jpg"
+        ]
+    },
+    {
+        "conversations": [
+            {
+                "from": "human",
+                "value": "AP view chest x-ray image, No acute cardiopulmonary process.  No evidence of free air beneath the diaphragms."
+            },
+            {
+                "from": "gpt",
+                "value": "<|image|>"
+            }
+        ],
+        "image": [
+            "/data/xxing/datasets/MIMIC-CXR/files/p19/p19023118/s50688363/2d8ff122-9033f698-4190575b-d5de4716-f11842b9.jpg"
+        ]
+    },
+    {...},
+    {...}
+]
+```
+
+*Rules:*
+
+1. The file is a list of dictionaries, and each dictionary represents a data point
+2. Each dictionary contains the key "conversations"
+3. If the conversation involves image(s), the data point should also contain the `image` key, otherwise the `image` key can be omitted
+4. The location of each image should be explicitly specified in the conversation using the `<|image|>` symbol
+   1. Apparently, the number of occurrences of the `<|image|>` symbol should be equal to the number of images in the `image` key
+
+
+#### How to adapt to your own format:
+
+If you have your own data with a different format, you can easily adapt the code to deal with it by modifying the `pre_tokenize.py` file.
+We have prepared the space, which is in `ItemProcessor.process_item`, for adding your logic that converts data points of your own format into the standard format.
+
+### 2. Concat Records
+
+After tokenization, You need to concat the record files generated by different processes (GPUs) into one single record file.
+**Note that we use the term "record file" to refer to the meta file that contains the information of all the saved token files,
+which is different from the token files themselves.**
+
+```bash
+python -u pre_tokenize/concat_record.py \
+--sub_record_dir /path/to/out_dir \
+--save_path /path/to/out_dir/record.json
+```
+
+### 3. External Representation Extraction
+First you need to download the corresponding foundation model from huggingface ([BioMedCLIP](https://huggingface.co/chuhac/BiomedCLIP-vit-bert-hf),
+[CLIP-L](https://huggingface.co/openai/clip-vit-large-patch14),
+[MedSAM](https://huggingface.co/wanglab/medsam-vit-base)).
+
+Next you can extract external representation for training:
+```bash
+python pre_tokenize/pre_biomedclip_feature.py
+```
+or
+```bash
+python pre_tokenize/pre_medsam_feature.py
+```
+
+### Training
+
+#### Command:
+We provide an example experiment scripts [scrpits/7B.sh](arra/scrpits/7B.sh) for training the 7B model.
+
+```bash
+bash scrpits/7B.sh
+```
+
+
+#### About the `--data_config` argument:
+The ``--data_config`` argument should point to a `*.yaml` file, which is a meta file that gathers one or multiple record files.
+In other words, you may pre-tokenize multiple datasets independently and list the record files in the same data config file
+for joint training.
+
+## Acknowledgement
+This code is build on the following repositories:
+[https://github.com/Alpha-VLLM/Lumina-mGPT](https://github.com/Alpha-VLLM/Lumina-mGPT).
+
+## BibTeX
+```bibtex
+@article{xie2025unleashing,
+  title={Unleashing the Potential of Large Language Models for Text-to-Image Generation through Autoregressive Representation Alignment},
+  author={Xie, Xing and Liu, Jiawei and Lin, Ziyue and Fan, Huijie and Han, Zhi and Tang, Yandong and Qu, Liangqiong},
+  journal={arXiv preprint arXiv:2503.07334},
+  year={2025}
+}
