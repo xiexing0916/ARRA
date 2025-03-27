@@ -1,7 +1,7 @@
 # Unleashing the Potential of Large Language Models for Text-to-Image Generation through Autoregressive Representation Alignment
 <div align="center">
   
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-2406.06525-b31b1b.svg)](https://arxiv.org/abs/2503.07334)&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.07334-b31b1b.svg)](https://arxiv.org/abs/2503.07334)&nbsp;
 
 </div>
 
