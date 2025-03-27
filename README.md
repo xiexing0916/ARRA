@@ -146,11 +146,11 @@ The ``--data_config`` argument should point to a `*.yaml` file, which is a meta 
 In other words, you may pre-tokenize multiple datasets independently and list the record files in the same data config file
 for joint training.
 
-## Acknowledgement
+## 🙏 Acknowledgement
 This code is build on the following repositories:
 [https://github.com/Alpha-VLLM/Lumina-mGPT](https://github.com/Alpha-VLLM/Lumina-mGPT).
 
-## BibTeX
+## 📚 BibTeX
 ```bibtex
 @article{xie2025unleashing,
   title={Unleashing the Potential of Large Language Models for Text-to-Image Generation through Autoregressive Representation Alignment},
