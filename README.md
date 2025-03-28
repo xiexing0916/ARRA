@@ -68,7 +68,7 @@ done
             }
         ],
         "image": [
-            "/data/xxing/datasets/MIMIC-CXR/files/p19/p19023118/s50489739/da2a33b1-a3e756c6-9aec59ef-dcc2bfe8-0e872a6f.jpg"
+            "./datasets/MIMIC-CXR/files/p19/p19023118/s50489739/da2a33b1-a3e756c6-9aec59ef-dcc2bfe8-0e872a6f.jpg"
         ]
     },
     {
@@ -83,7 +83,7 @@ done
             }
         ],
         "image": [
-            "/data/xxing/datasets/MIMIC-CXR/files/p19/p19023118/s50688363/2d8ff122-9033f698-4190575b-d5de4716-f11842b9.jpg"
+            "./datasets/MIMIC-CXR/files/p19/p19023118/s50688363/2d8ff122-9033f698-4190575b-d5de4716-f11842b9.jpg"
         ]
     },
     {...},
