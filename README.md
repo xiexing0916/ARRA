@@ -13,7 +13,8 @@
 ### ARRA Framework
 ![ARRA Framework](./framework.png "ARRA Framework")
 ### Results
-![ARRA main Results](./main_results "ARRA main Results")
+![ARRA main Results](./main_results.png "ARRA main Results")
+### Results for X-rays generation
 ![ARRA Results](./results.png "ARRA Results")
 
 
