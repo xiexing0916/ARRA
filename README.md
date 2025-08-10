@@ -11,8 +11,9 @@
 - The innovative `<HYBNEXT>` token (enforcing dual local-global constraints)
 
 ### ARRA Framework
-![ARRA Framework](./pipline.png "ARRA Framework")
+![ARRA Framework](./framework.png "ARRA Framework")
 ### Results
+![ARRA main Results](./main_results "ARRA main Results")
 ![ARRA Results](./results.png "ARRA Results")
 
 
