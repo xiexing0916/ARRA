@@ -11,15 +11,56 @@
 - The innovative `<HYBNEXT>` token (enforcing dual local-global constraints)
 
 ### ARRA Framework
-![ARRA Framework](./framework.png "ARRA Framework")
+![ARRA Framework](./assets/framework.png "ARRA Framework")
 ### Results
-![ARRA main results](./main_results_natural.png)
+![ARRA main results](./assets/main_results_natural.png)
 ### Results for X-rays generation
-![ARRA Results](./results.png "ARRA Results")
+![ARRA Results](./assets/results.png "ARRA Results")
 
+## ⛽ Installation
+1. Setup
+```
+conda create -n arra python=3.10 -y
+conda activate arra
+pip install -r requirements.txt
+pip install flash-attn --no-build-isolation
+```
+
+2. Install xllmx as python package
+
+```bash
+# bash
+# go to the root path of the project
+cd ARRA
+# install as package
+pip install -e .
+```
+
+3. Add VQ-VAE Weights
+
+Please manually download the original VQ-VAE weights [provided by Meta](https://github.com/facebookresearch/chameleon) and
+put them to the following directory:
+
+```
+ARRA
+- arra/
+    - ckpts/
+        - chameleon/
+            - tokenizer/
+                - text_tokenizer.json
+                - vqgan.yaml
+                - vqgan.ckpt
+- xllmx/
+- ...
+```
 
 ## 🚀 Demo
-1. Download pretrained models
+1. Download pretrained models from:
+
+| Model        | Size | Huggingface                                                                              |
+| ------------ | --- | ---------------------------------------------------------------------------------------- |
+| ARRA-Adapt-MIMIC-7B   | 7B  | [xing0916/ARRA-Adapt-MIMIC-7B](https://huggingface.co/xing0916/ARRA-Adapt-MIMIC-7B)       |
+
 
 2. Run inference:
 ```
