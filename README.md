@@ -1,7 +1,8 @@
 # Unleashing the Potential of Large Language Models for Text-to-Image Generation through Autoregressive Representation Alignment
 <div align="center">
   
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.07334-b31b1b.svg)](https://arxiv.org/abs/2503.07334)&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.07334-b31b1b.svg)](https://arxiv.org/abs/2503.07334)&nbsp; 
+<a href="https://huggingface.co/xing0916/ARRA-Adapt-MIMIC-7B"><img alt="Model" src="https://img.shields.io/badge/🤗-Model-FFFDF5"></a>
 
 </div>
 
