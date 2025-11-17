@@ -4,7 +4,7 @@ import os
 
 # ******************* Image Generation ******************
 inference_solver = FlexARInferenceSolver(
-    model_path="/data/xxing/Lumina-mGPT-anole/lumina_mgpt/output/7B_cxr_clip_layer1_s1_last_token_from_lumina7b_lr2e5_new/epoch0",  # Replace with the directory of model
+    model_path="",  # Replace with the directory of model
     precision="bf16",
     target_size=512,
 )
